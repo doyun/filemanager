@@ -1,0 +1,8 @@
+127.0.0.1 - - [27/Apr/2016:19:45:12 +0300] "POST /filemanager/hello/jsonBean HTTP/1.1" 404 47 http-bio-58616-exec-1 33
+127.0.0.1 - - [27/Apr/2016:19:45:12 +0300] "GET /filemanager/hello/echo/SierraTangoNevada HTTP/1.1" 404 47 http-bio-58616-exec-3 3
+0:0:0:0:0:0:0:1 - - [27/Apr/2016:19:45:58 +0300] "POST /filemanager/services/dao/lfao HTTP/1.1" 200 13 http-bio-13000-exec-1 283
+0:0:0:0:0:0:0:1 - - [27/Apr/2016:19:46:32 +0300] "POST /filemanager/services/dao/lfao HTTP/1.1" 200 13 http-bio-13000-exec-2 19
+0:0:0:0:0:0:0:1 - - [27/Apr/2016:19:49:43 +0300] "POST /filemanager/services/dao/lfao HTTP/1.1" 200 13 http-bio-13000-exec-1 212
+0:0:0:0:0:0:0:1 - - [27/Apr/2016:19:53:57 +0300] "GET /filemanager/services/explorer/local/tree?path=D:\test HTTP/1.1" 200 512 http-bio-13000-exec-1 445
+0:0:0:0:0:0:0:1 - - [27/Apr/2016:19:55:45 +0300] "GET /filemanager/services/explorer/local/tree?path=D:\test HTTP/1.1" 200 512 http-bio-13000-exec-5 5
+0:0:0:0:0:0:0:1 - - [27/Apr/2016:19:58:49 +0300] "POST /filemanager/services/dao/lfao HTTP/1.1" 400 - http-bio-13000-exec-1 136
