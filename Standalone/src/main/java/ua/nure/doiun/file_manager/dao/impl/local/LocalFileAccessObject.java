@@ -2,6 +2,7 @@ package ua.nure.doiun.file_manager.dao.impl.local;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.apache.cxf.jaxrs.ext.multipart.Multipart;
 import ua.nure.doiun.file_manager.dao.FileAccessObject;
@@ -36,7 +37,7 @@ public class LocalFileAccessObject implements FileAccessObject {
     @GET
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response getFile(@QueryParam("filepath") String filePath) {
-        File file = new File(filePath);
+        File file = new File(StringEscapeUtils.escapeJava(filePath));
 
         if (!file.exists()) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
@@ -50,7 +51,7 @@ public class LocalFileAccessObject implements FileAccessObject {
     @Override
     @DELETE
     public Response deleteFile(@QueryParam("filepath") String filePath) {
-        File file = new File(filePath);
+        File file = new File(StringEscapeUtils.escapeJava(filePath));
 
         if (!file.exists()) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
@@ -81,7 +82,7 @@ public class LocalFileAccessObject implements FileAccessObject {
         OutputStream out = null;
         try {
             MultivaluedMap<String, String> map = attachment.getHeaders();
-            File file = new File(filePath + "/" + getFileName(map));
+            File file = new File(StringEscapeUtils.escapeJava(filePath) + "/" + getFileName(map));
             in = handler.getInputStream();
             out = new FileOutputStream(file);
             IOUtils.copy(in, out);

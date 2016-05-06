@@ -1,6 +1,6 @@
 package ua.nure.doiun.file_manager.model;
 
-import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -8,9 +8,11 @@ import java.util.List;
  */
 public class FileNode {
 
+    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
+
     private String fileName;
     private Object fileSize;
-    private Date fileDate;
+    private String fileDate;
     private String filePath;
     private boolean isDirectory;
     private List<FileNode> subNodes;
@@ -31,11 +33,11 @@ public class FileNode {
         this.fileSize = fileSize;
     }
 
-    public Date getFileDate() {
+    public String getFileDate() {
         return fileDate;
     }
 
-    public void setFileDate(Date fileDate) {
+    public void setFileDate(String fileDate) {
         this.fileDate = fileDate;
     }
 
