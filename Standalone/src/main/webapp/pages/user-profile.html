@@ -48,46 +48,28 @@
             </div>
             <!-- /.row -->
             <div class="row">
-                <div class="col-lg-5 col-md-5">
-                    <div class="panel panel-default">
+                <div class="col-md-4 col-md-offset-4">
+                    <div class="change-pass-panel panel panel-default">
                         <div class="panel-heading">
-                            <h4>
-                                Fixed Header Scrolling Table 
-                            </h4>
+                            <h3 class="panel-title">Change password</h3>
                         </div>
-                        <table class="table table-striped left-table">
-                            <thead>
-                                <tr>
-                                    <th class="col-xs-8">Name</th>
-                                    <th class="col-xs-2">Date</th>
-                                    <th class="col-xs-2">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                                             
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-2"></div>
-                <div class="col-lg-5 col-md-5">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h4>
-                                Fixed Header Scrolling Table 
-                            </h4>
+                        <div class="panel-body">
+                            <form role="form" action="/filemanager/services/user" method='POST'>
+                                <fieldset>
+                                    <div class="form-group">
+                                        <input type="password" name="currentPassword" id="currentPassword" placeholder="Old password" class="form-control" autofocus/>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" name="newPassword" id="newPassword" placeholder="New password" class="form-control" minlength="5"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" name="newPasswordConfirmation" id="newPasswordConfirmation" placeholder="Confirm new password" class="form-control" minlength="5" oninput="check(this)"  />
+                                    </div>
+                                    <!-- Change this to a button or input when using this as a form -->
+                                    <input type="submit" class="btn btn-lg btn-success btn-block" value="Save"/>
+                                </fieldset>
+                            </form>
                         </div>
-                        <table class="table table-striped right-table">
-                            <thead>
-                                <tr>
-                                    <th class="col-xs-8">Name</th>
-                                    <th class="col-xs-2">Date</th>
-                                    <th class="col-xs-2">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
                     </div>
                 </div>
             </div>
@@ -97,7 +79,7 @@
 
     </div>
     <!-- /#wrapper -->
-    
+        
     <div class="w3-include-html-modals"></div>
 
     <!-- jQuery -->
@@ -105,10 +87,21 @@
     
     <script>
         $(function(){
-            $(".w3-include-html").load("navigation.html");
+            $(".w3-include-html").load("navigation.html"); 
             $(".w3-include-html-modals").load("modals.html");
         });
     </script>
+    
+    <script language='javascript' type='text/javascript'>
+    function check(input) {
+        if (input.value != document.getElementById('newPassword').value) {
+            input.setCustomValidity('Password confirmation must match new password.');
+        } else {
+            // input is valid -- reset the error message
+            input.setCustomValidity('');
+        }
+    }
+</script>
 
     <!-- Bootstrap Core JavaScript -->
     <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>

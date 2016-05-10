@@ -1,9 +1,10 @@
-package ua.nure.doiun.file_manager.explorer.impl.local;
+package ua.nure.doiun.file_manager.services.explorer.impl.local;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.cxf.common.util.StringUtils;
-import ua.nure.doiun.file_manager.explorer.FileTreeExplorer;
+import ua.nure.doiun.file_manager.services.explorer.FileTreeExplorer;
 import ua.nure.doiun.file_manager.model.FileNode;
+import ua.nure.doiun.file_manager.util.Constants;
 import ua.nure.doiun.file_manager.util.FileNodeComparator;
 
 import javax.swing.filechooser.FileSystemView;
@@ -78,10 +79,9 @@ public class FileTreeExplorerImpl implements FileTreeExplorer {
 
     private FileNode getLocalDisks() {
         List<File> root = Arrays.asList(File.listRoots());
-        String local = "Local Disk";
         FileSystemView fileSystemView = FileSystemView.getFileSystemView();
         List<FileNode> fileNodes = root.stream().filter(file ->
-                local.equals(fileSystemView.getSystemTypeDescription(file))
+                Constants.LOCAL_DISK_TYPE.equals(fileSystemView.getSystemTypeDescription(file))
         ).map(file -> getFileNodeFromFile(file, false)).collect(Collectors.toList());
         FileNode fileNode = new FileNode();
         fileNode.setFileName("root");

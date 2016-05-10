@@ -1,4 +1,4 @@
-package ua.nure.doiun.file_manager.explorer;
+package ua.nure.doiun.file_manager.services.explorer;
 
 import ua.nure.doiun.file_manager.model.FileNode;
 

@@ -13,6 +13,30 @@
   float: left;
 }
 
+tr {
+    min-height: 38px;
+    -webkit-user-select: none; /* Chrome/Safari */        
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none;
+    cursor: default;
+}
+
+td {
+    min-height: 37px;
+}
+
+span.glyphicon {
+    margin: 0 3px;
+}
+
+span.glyphicon.glyphicon-folder-open {
+    margin-right: 10px;
+}
+
+.actions span.glyphicon {
+    cursor: pointer;
+}
+
 .table-striped>tbody>tr:nth-child(odd)>td {
     background-color: #f9f9f9;
 }
