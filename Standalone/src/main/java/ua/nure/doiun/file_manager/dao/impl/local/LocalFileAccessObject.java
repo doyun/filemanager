@@ -5,26 +5,16 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.apache.cxf.jaxrs.ext.multipart.Multipart;
+import org.apache.log4j.Logger;
 import ua.nure.doiun.file_manager.dao.FileAccessObject;
 
 import javax.activation.DataHandler;
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.UUID;
 
 /**
@@ -33,15 +23,20 @@ import java.util.UUID;
 @Path("/dao/lfao")
 public class LocalFileAccessObject implements FileAccessObject {
 
+    private static final Logger LOG = Logger.getLogger(LocalFileAccessObject.class);
+
     @Override
     @GET
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response getFile(@QueryParam("filepath") String filePath) {
-        File file = new File(StringEscapeUtils.escapeJava(filePath));
+        String escapedFilePath = StringEscapeUtils.escapeJava(filePath);
+        File file = new File(escapedFilePath);
 
         if (!file.exists()) {
+            LOG.warn(String.format("File %s does not exist, can not download.", escapedFilePath));
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         } else if (file.isDirectory()) {
+            LOG.warn(String.format("File %s is directory, can not download.", escapedFilePath));
             throw new WebApplicationException("Can not upload directory", Response.Status.BAD_REQUEST);
         }
 
@@ -51,9 +46,11 @@ public class LocalFileAccessObject implements FileAccessObject {
     @Override
     @DELETE
     public Response deleteFile(@QueryParam("filepath") String filePath) {
-        File file = new File(StringEscapeUtils.escapeJava(filePath));
+        String escapedFilePath = StringEscapeUtils.escapeJava(filePath);
+        File file = new File(escapedFilePath);
 
         if (!file.exists()) {
+            LOG.warn(String.format("File %s does not exist, can not delete.", escapedFilePath));
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
 
@@ -63,7 +60,7 @@ public class LocalFileAccessObject implements FileAccessObject {
                 FileUtils.deleteDirectory(file);
                 wasDeleted = true;
             } catch (IOException e) {
-                e.printStackTrace();
+                LOG.error(e.getMessage(), e);
             }
         } else {
             wasDeleted = file.delete();
@@ -86,8 +83,8 @@ public class LocalFileAccessObject implements FileAccessObject {
             in = handler.getInputStream();
             out = new FileOutputStream(file);
             IOUtils.copy(in, out);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            LOG.error(e.getMessage(), e);
         } finally {
             IOUtils.closeQuietly(out);
             IOUtils.closeQuietly(in);

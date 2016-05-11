@@ -2,15 +2,22 @@ package ua.nure.doiun.file_manager.services.explorer.impl.local;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.cxf.common.util.StringUtils;
-import ua.nure.doiun.file_manager.services.explorer.FileTreeExplorer;
+import org.apache.log4j.Logger;
 import ua.nure.doiun.file_manager.model.FileNode;
+import ua.nure.doiun.file_manager.services.explorer.FileTreeExplorer;
 import ua.nure.doiun.file_manager.util.Constants;
 import ua.nure.doiun.file_manager.util.FileNodeComparator;
 
 import javax.swing.filechooser.FileSystemView;
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import java.io.File;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -20,11 +27,14 @@ import java.util.stream.Stream;
 @Path("/explorer/local/tree")
 public class FileTreeExplorerImpl implements FileTreeExplorer {
 
+    private static final Logger LOG = Logger.getLogger(FileTreeExplorerImpl.class);
+
     @Override
     @GET
     @Produces("application/json")
     public FileNode getFileNode(@QueryParam("path") String path) {
         FileNode fileNode = new FileNode();
+        LOG.info(String.format("Getting file node  by path %s", path));
         if (!StringUtils.isEmpty(path)) {
             File file = new File(StringEscapeUtils.escapeJava(path));
             if (file.exists()) {
@@ -59,7 +69,7 @@ public class FileTreeExplorerImpl implements FileTreeExplorer {
             fileNode.setFileName(file.getName());
             fileNode.setFileDate(FileNode.DATE_FORMAT.format(new Date(file.lastModified())));
             fileNode.setFilePath(file.getPath());
-            fileNode.setFileSize(getFileLendth(file));
+            fileNode.setFileSize(getFileLength(file));
             fileNode.setDirectory(file.isDirectory());
             if (withSubNodes) {
                 fileNode.setSubNodes(listFilesInDir(file));
@@ -70,7 +80,7 @@ public class FileTreeExplorerImpl implements FileTreeExplorer {
         return fileNode;
     }
 
-    private long getFileLendth(File file) {
+    private long getFileLength(File file) {
         /*if(file.isDirectory()){
             return FileUtils.sizeOfDirectory(file);
         }*/
