@@ -3,6 +3,7 @@
         var leftFileManager = new FileManager($('.left-table'));
         var leftFileManager = new FileManager($('.right-table'));
         setOnTableRowClickHandler();
+        
     });
 })(jQuery);
 
@@ -23,6 +24,8 @@ var FileManager = (function (FileManager) {
             $tbody = $elem.find('tbody');
         
         renderDirectory("");
+        setOnUploadFromSubmitHandler();
+        setOnUploadFileSelectHandler();
         
         function renderDirectory(path) {
             var fileNodes = [];
@@ -32,6 +35,7 @@ var FileManager = (function (FileManager) {
                     fileNodes.push(getJqueryObjectByData(elem));
                 });
                 $elem.parent().find('h4').text(path ? path : 'root');
+                $elem.siblings().find('#filepath').val(path ? path : '')
                 $tbody.append(fileNodes);
                 $tbody.find('tr').dblclick(onFileNodeDoubleClickHandler);
                 $tbody.find('.glyphicon-download-alt').click(onDownloadFileNodeClickHandler);
@@ -76,6 +80,19 @@ var FileManager = (function (FileManager) {
                             });
                     }
                 }
+            });
+        }
+        
+        function setOnUploadFromSubmitHandler() {
+            $elem.parent().find('#fileUploadForm').ajaxForm({
+                success : function (response) {
+                    showInformPopup("File uploaded")
+                }
+            });
+        }
+        function setOnUploadFileSelectHandler() {
+            $elem.parent().find("#file").change(function () {
+                $elem.parent().find("#filePath").val(this.value);
             });
         }
     };

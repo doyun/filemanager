@@ -67,6 +67,18 @@
                                                              
                             </tbody>
                         </table>
+                        <div class="panel-footer">
+                            <form id="fileUploadForm" action="/filemanager/services/dao/lfao" method="post" enctype="multipart/form-data">
+                                <label for="filePath">File to upload</label>
+                                <input id="filePath" name="filePath" placeholder="Choose File"/>
+                                <div class="fileUpload btn btn-primary">
+                                    <span>Browse</span>
+                                    <input id="file" type="file" name="file" class="upload" />
+                                </div>
+                                <input type="hidden" name="filepath" id="filepath" value=""/>
+                                <input type="submit" class="btn btn-default" value="Upload It" />
+                            </form>
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-2"></div>
@@ -88,6 +100,18 @@
                             <tbody>
                             </tbody>
                         </table>
+                        <div class="panel-footer">
+                            <form id="fileUploadForm" action="/filemanager/services/dao/lfao" method="post" enctype="multipart/form-data">
+                                <label for="filePath">File to upload</label>
+                                <input id="filePath" name="filePath" placeholder="Choose File"/>
+                                <div class="fileUpload btn btn-primary">
+                                    <span>Browse</span>
+                                    <input id="file" type="file" name="file" class="upload" />
+                                </div>
+                                <input type="hidden" name="filepath" id="filepath" value=""/>
+                                <input type="submit" class="btn btn-default" value="Upload It" />
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -107,6 +131,8 @@
         $(function(){
             $(".w3-include-html").load("navigation.html");
             $(".w3-include-html-modals").load("modals.html");
+            
+            
         });
     </script>
 
