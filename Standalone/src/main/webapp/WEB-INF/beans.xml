@@ -20,6 +20,7 @@
             <bean class="ua.nure.doiun.file_manager.services.explorer.impl.local.FileTreeExplorerImpl"/>
             <bean class="ua.nure.doiun.file_manager.dao.impl.local.LocalFileAccessObject"/>
             <bean class="ua.nure.doiun.file_manager.services.UserManager"/>
+            <bean class="ua.nure.doiun.file_manager.services.AuthenticationService"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
