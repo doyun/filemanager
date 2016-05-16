@@ -3,6 +3,7 @@ package ua.nure.doiun.file_manager.services;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 import org.apache.log4j.Logger;
+import ua.nure.doiun.file_manager.util.SessionUtil;
 
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
@@ -37,6 +38,7 @@ public class AuthenticationService {
                 LOG.warn("Could not login to the server");
                 return Response.status(Response.Status.UNAUTHORIZED).build();
             } else {
+                SessionUtil.setFtpClient(ftpClient);
                 LOG.info("LOGGED IN SERVER");
             }
         } catch (IOException e) {

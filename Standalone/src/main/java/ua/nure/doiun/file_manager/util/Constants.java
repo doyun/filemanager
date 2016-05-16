@@ -10,4 +10,10 @@ public class Constants {
     public static final String LOGIN = "login";
     public static final String PASSWORD = "password";
     public static final String PASSHASH_ALGORITHM = "SHA-1";
+
+    public static final String FILE_PATH_SEPARATOR = "/";
+
+    class Session{
+        public static final String FTP_CLIENT = "ftpClient";
+    }
 }

@@ -1,6 +1,6 @@
 package ua.nure.doiun.file_manager.services.explorer;
 
-import ua.nure.doiun.file_manager.model.FileNode;
+import javax.ws.rs.core.Response;
 
 /**
  * @author Mykyta_Doiun
@@ -8,5 +8,5 @@ import ua.nure.doiun.file_manager.model.FileNode;
 
 public interface FileTreeExplorer {
 
-    FileNode getFileNode(String path);
+    Response getFileNode(String path);
 }

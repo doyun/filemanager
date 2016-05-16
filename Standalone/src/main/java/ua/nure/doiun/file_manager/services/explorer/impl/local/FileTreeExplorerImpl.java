@@ -13,6 +13,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Response;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
@@ -32,7 +33,7 @@ public class FileTreeExplorerImpl implements FileTreeExplorer {
     @Override
     @GET
     @Produces("application/json")
-    public FileNode getFileNode(@QueryParam("path") String path) {
+    public Response getFileNode(@QueryParam("path") String path) {
         FileNode fileNode = new FileNode();
         LOG.info(String.format("Getting file node  by path %s", path));
         if (!StringUtils.isEmpty(path)) {
@@ -43,7 +44,7 @@ public class FileTreeExplorerImpl implements FileTreeExplorer {
         } else {
             fileNode = getLocalDisks();
         }
-        return fileNode;
+        return Response.ok(fileNode).build();
     }
 
     private List<FileNode> listFilesInDir(File directory) {
