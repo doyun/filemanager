@@ -1,5 +1,6 @@
 package ua.nure.doiun.file_manager.services.explorer.impl.ftp;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
@@ -10,10 +11,7 @@ import ua.nure.doiun.file_manager.util.Constants;
 import ua.nure.doiun.file_manager.util.FileNodeComparator;
 import ua.nure.doiun.file_manager.util.SessionUtil;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.Date;
@@ -32,11 +30,15 @@ public class FileTreeExplorerImpl implements FileTreeExplorer {
     @Override
     @GET
     @Produces("application/json")
-    public Response getFileNode(@QueryParam("path") String path) {
+    public Response getFileNode(@DefaultValue("/") @QueryParam("path") String path) {
         FileNode fileNode = new FileNode();
+        path = StringEscapeUtils.escapeJava(path);
         LOG.info(String.format("Getting file node  by path %s", path));
         FTPClient ftpClient = SessionUtil.getFtpClient();
-        if (!StringUtils.isEmpty(path) && ftpClient != null) {
+        if(ftpClient != null){
+            if(StringUtils.isEmpty(path)){
+                path = Constants.FILE_PATH_SEPARATOR;
+            }
             try {
                 fileNode = getFileNodeFromPath(path, ftpClient);
             } catch (IOException e) {
@@ -56,11 +58,19 @@ public class FileTreeExplorerImpl implements FileTreeExplorer {
             FTPFile[] ftpFiles = ftpClient.listFiles(path);
             List<FileNode> subNodes = Stream.of(ftpFiles).map(ftpFile -> ftpFileToFileNode(ftpFile, fileNode.getFileName())).sorted(new FileNodeComparator())
                     .collect(Collectors.toList());
-            fileNode.setSubNodes(subNodes);
+            subNodes.add(0, getRootFileNode(path, ftpClient));
             fileNode.setSubNodes(subNodes);
         } else {
             fileNode = new FileNode();
         }
+        return fileNode;
+    }
+
+    private FileNode getRootFileNode(String path, FTPClient ftpClient) throws IOException {
+        FileNode fileNode = new FileNode();
+        fileNode.setDirectory(true);
+        fileNode.setFileName("..");
+        fileNode.setFilePath(path.substring(0, path.lastIndexOf("/")));
         return fileNode;
     }
 

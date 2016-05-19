@@ -21,9 +21,9 @@ import java.util.UUID;
  * @author Mykyta_Doiun
  */
 @Path("/dao/lfao")
-public class LocalFileAccessObject implements FileAccessObject {
+public class FileAccessObjectImpl implements FileAccessObject {
 
-    private static final Logger LOG = Logger.getLogger(LocalFileAccessObject.class);
+    private static final Logger LOG = Logger.getLogger(FileAccessObjectImpl.class);
 
     @Override
     @GET

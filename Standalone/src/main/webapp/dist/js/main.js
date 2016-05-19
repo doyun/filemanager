@@ -1,7 +1,7 @@
 (function($){
     $(document).ready(function() {
-        var leftFileManager = new FileManager($('.left-table'));
-        var leftFileManager = new FileManager($('.right-table'));
+        var leftFileManager = new FileManager($('.left-table'), ENDPOINTS.LOCAL);
+        var rightFileManager = new FileManager($('.right-table'), ENDPOINTS.FTP);
         setOnTableRowClickHandler();
         
     });
@@ -14,27 +14,40 @@ var setOnTableRowClickHandler = function() {
     });
 };
 
+var ENDPOINTS = {
+    LOCAL : {
+        NAME : "local:",
+        TREE : "/filemanager/services/explorer/local/tree",
+        FAO : "/filemanager/services/dao/lfao"
+    },
+    FTP : {
+        NAME : "ftp:",
+        TREE : "/filemanager/services/explorer/ftp/tree",
+        FAO : "/filemanager/services/dao/ftpfao"
+    }
+}
+
 var FileManager = (function (FileManager) {
 
-    var $elem;
-
-    var FileManager = function ($elem) {
+    var FileManager = function ($elem, _ENDPOINT) {
         this.$elem = $elem;
+        this.ENDPOINT = _ENDPOINT;
         var self = this,
             $tbody = $elem.find('tbody');
         
         renderDirectory("");
-        setOnUploadFromSubmitHandler();
+        setOnUploadFormSubmitHandler();
         setOnUploadFileSelectHandler();
+        $elem.parent().find('#fileUploadForm').attr('action', self.ENDPOINT.FAO);
         
         function renderDirectory(path) {
             var fileNodes = [];
-            loadDirectory.call(this, path).done(function (data) {
+            loadDirectory.call(self, path).done(function (data) {
                 $tbody.empty();
                 data.subNodes.forEach(function(elem){
-                    fileNodes.push(getJqueryObjectByData(elem));
+                    fileNodes.push(getJqueryFileNodeObjectByData(elem));
                 });
-                $elem.parent().find('h4').text(path ? path : 'root');
+                $elem.parent().find('h4').text(self.ENDPOINT.NAME + (path ? path : 'root'));
                 $elem.siblings().find('#filepath').val(path ? path : '')
                 $tbody.append(fileNodes);
                 $tbody.find('tr').dblclick(onFileNodeDoubleClickHandler);
@@ -58,7 +71,7 @@ var FileManager = (function (FileManager) {
             var $currentFileNode = $(event.currentTarget).closest('tr');
             confirmAction("you want to delete file " + $currentFileNode.data('filepath'), function() {
                 if($currentFileNode.data('filepath')) {
-                    deleteFileNode($currentFileNode.data('filepath'))
+                    deleteFileNode.call(self, $currentFileNode.data('filepath'))
                         .done(function(data){
                             $currentFileNode.remove();
                         })
@@ -74,16 +87,16 @@ var FileManager = (function (FileManager) {
             confirmAction("you want to download " + $currentFileNode.data('filename'), function() {
                 if(!$currentFileNode.data('directory')) {
                     if($currentFileNode.data('filepath')) {
-                        downloadFileNode($currentFileNode.data('filepath'))
+                        downloadFileNode.call(self, $currentFileNode.data('filepath'))
                             .fail(function(data){
-                                alert("fail");
+                                //alert("fail");
                             });
                     }
                 }
             });
         }
         
-        function setOnUploadFromSubmitHandler() {
+        function setOnUploadFormSubmitHandler() {
             $elem.parent().find('#fileUploadForm').ajaxForm({
                 success : function (response) {
                     showInformPopup("File uploaded")
@@ -111,7 +124,7 @@ var FileManager = (function (FileManager) {
 
     var loadDirectory = function (path) {
         var deferred = $.Deferred();
-        $.get( "/filemanager/services/explorer/local/tree", { path: path} )
+        $.get( this.ENDPOINT.TREE, { path: path} )
             .done(function( data ) {
                     deferred.resolve(data);
                 });   
@@ -120,7 +133,7 @@ var FileManager = (function (FileManager) {
     
     var downloadFileNode = function (path) {
         var deferred = $.Deferred();
-        $.fileDownload('/filemanager/services/dao/lfao?filepath=' + path)
+        $.fileDownload( this.ENDPOINT.FAO + '?filepath=' + path)
             .done(function (data) { deferred.resolve(data); })
             .fail(function (data) { deferred.reject(data); });
         return deferred;
@@ -129,7 +142,7 @@ var FileManager = (function (FileManager) {
     var deleteFileNode = function (path) {
         var deferred = $.Deferred();
         $.ajax({
-            url: '/filemanager/services/dao/lfao?filepath=' + path,
+            url: this.ENDPOINT.FAO + '?filepath=' + path,
             type: 'DELETE',
             success: function(data) {
                 deferred.resolve(data);
@@ -141,7 +154,7 @@ var FileManager = (function (FileManager) {
         return deferred;
     };
     
-    var getJqueryObjectByData = function (fileNode) {
+    var getJqueryFileNodeObjectByData = function (fileNode) {
         var tr = $('<tr></tr>'),
             name = $('<td class="col-xs-7"></td>'),
             date = $('<td class="col-xs-3"></td>'),
