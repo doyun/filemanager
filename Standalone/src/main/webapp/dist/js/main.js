@@ -1,7 +1,7 @@
 (function($){
     $(document).ready(function() {
         var leftFileManager = new FileManager($('.left-table'), ENDPOINTS.LOCAL);
-        var rightFileManager = new FileManager($('.right-table'), ENDPOINTS.FTP);
+        var rightFileManager = new FileManager($('.right-table'), ENDPOINTS.LOCAL);
         setOnTableRowClickHandler();
         
     });
@@ -36,6 +36,7 @@ var FileManager = (function (FileManager) {
             $tbody = $elem.find('tbody');
         
         renderDirectory("");
+        setUpDropdown();
         setOnUploadFormSubmitHandler();
         setOnUploadFileSelectHandler();
         $elem.parent().find('#fileUploadForm').attr('action', self.ENDPOINT.FAO);
@@ -103,10 +104,27 @@ var FileManager = (function (FileManager) {
                 }
             });
         }
+        
         function setOnUploadFileSelectHandler() {
             $elem.parent().find("#file").change(function () {
                 $elem.parent().find("#filePath").val(this.value);
             });
+        }
+        
+        function setUpDropdown(){
+            var container = $elem.parent().find(".dropdown-menu")
+            for (var endpoint in ENDPOINTS) {
+                if (ENDPOINTS.hasOwnProperty(endpoint)) {
+                    var element = ENDPOINTS[endpoint];
+                    var item = $("<li data-storage='" + endpoint + "'><a href='#'>" + element.NAME + "</a></li>");
+                    item.click(function(event){
+                        self.ENDPOINT = ENDPOINTS[$(event.currentTarget).data('storage')];
+                        renderDirectory("");
+                        $elem.parent().find('#fileUploadForm').attr('action', self.ENDPOINT.FAO);
+                    });
+                    container.append(item);
+                }
+            }
         }
     };
     
