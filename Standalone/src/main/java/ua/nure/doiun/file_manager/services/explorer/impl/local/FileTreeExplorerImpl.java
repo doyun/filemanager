@@ -91,9 +91,7 @@ public class FileTreeExplorerImpl implements FileTreeExplorer {
     private FileNode getLocalDisks() {
         List<File> root = Arrays.asList(File.listRoots());
         FileSystemView fileSystemView = FileSystemView.getFileSystemView();
-        List<FileNode> fileNodes = root.stream().filter(file ->
-                Constants.LOCAL_DISK_TYPE.equals(fileSystemView.getSystemTypeDescription(file))
-        ).map(file -> getFileNodeFromFile(file, false)).collect(Collectors.toList());
+        List<FileNode> fileNodes = root.stream().map(file -> getFileNodeFromFile(file, false)).collect(Collectors.toList());
         FileNode fileNode = new FileNode();
         fileNode.setFileName("root");
         fileNode.setDirectory(true);

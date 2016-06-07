@@ -145,7 +145,10 @@ var FileManager = (function (FileManager) {
         $.get( this.ENDPOINT.TREE, { path: path} )
             .done(function( data ) {
                     deferred.resolve(data);
-                });   
+                })
+			.fail(function(){
+					deferred.reject(data);
+				});   
         return deferred;
     };
     
